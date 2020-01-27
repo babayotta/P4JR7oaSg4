@@ -1,0 +1,4 @@
+django
+uwsgi
+ipython
+psycopg2-binary
