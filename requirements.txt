@@ -3,3 +3,6 @@ uwsgi
 ipython
 psycopg2-binary
 pillow
+matplotlib
+numexpr
+numpy
