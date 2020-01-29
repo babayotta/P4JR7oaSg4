@@ -6,10 +6,15 @@ from .models import Function
 
 @admin.register(Function)
 class FunctionAdmin(admin.ModelAdmin):
+    readonly_fields = (
+        'id',
+        'date',
+        'image',
+    )
     list_display = (
         'id',
         'function_text',
-        'graph',
+        'image',
         'interval',
         'step',
         'date',
