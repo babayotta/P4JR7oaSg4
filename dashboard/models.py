@@ -3,11 +3,11 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+import datetime
+import io
 import numpy as np
 import numexpr as ne
 import matplotlib.pyplot as plt
-import datetime
-import io
 from django.core.files.images import ImageFile
 from django.utils.html import mark_safe
 
@@ -20,7 +20,7 @@ class Function(models.Model):
     date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.function_text
+        return f'{self.function_text} - {self.interval} - {self.step}'
 
     def plotter(self):
         now = self.date
@@ -41,6 +41,8 @@ class Function(models.Model):
         self.save()
         plt.close()
 
+    # https://stackoverflow.com/questions/16307307/django-admin-show-image-from-imagefield
     def image_tag(self):
-        return mark_safe('<img src="%s" width="250" />' % self.image.url)
+        if self.image:
+            return mark_safe('<img src="%s" width="250" />' % self.image.url)
     image_tag.short_description = 'image'
