@@ -6,15 +6,18 @@ from .models import Function
 
 @admin.register(Function)
 class FunctionAdmin(admin.ModelAdmin):
+    exclude = [
+        'image',
+    ]
     readonly_fields = (
         'id',
         'date',
-        'image',
+        'image_tag',
     )
     list_display = (
         'id',
         'function_text',
-        'image',
+        'image_tag',
         'interval',
         'step',
         'date',

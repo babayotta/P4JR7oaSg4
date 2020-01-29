@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import datetime
 import io
 from django.core.files.images import ImageFile
+from django.utils.html import mark_safe
 
 
 class Function(models.Model):
@@ -39,3 +40,7 @@ class Function(models.Model):
         self.image.save(f'{now}' + '.png', content_file)
         self.save()
         plt.close()
+
+    def image_tag(self):
+        return mark_safe('<img src="%s" width="250" />' % self.image.url)
+    image_tag.short_description = 'image'
