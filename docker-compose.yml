@@ -1,0 +1,65 @@
+version: '3.4'
+
+services:
+
+  rabbitmq:
+    container_name: test_task_rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:latest
+    networks:
+      - main
+    ports:
+    - "5672:5672"
+    restart: on-failure
+
+  postgres:
+    container_name: test_task_postgres
+    hostname: postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    networks:
+      - main
+    ports:
+    - "5432:5432"
+    restart: on-failure
+    volumes:
+    - postgres-data:/var/lib/postgresql/data
+
+  django:
+    build: .
+    command: sh -c "./wait-for-it.sh postgres:5432 && ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000"
+    container_name: test_task_django
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+    - "8000:8000"
+    volumes:
+    - .:/usr/src/test_task
+    hostname: django
+    image: django-image
+    networks:
+      - main
+    restart: on-failure
+
+  celery:
+    command: sh -c "./wait-for-it.sh rabbitmq:5672 && wait-for-it django:8000 -- celery -A mysite worker -l info"
+    container_name: test_task_celery
+    depends_on:
+      - django
+      - postgres
+      - rabbitmq
+    hostname: celery
+    image: django-image
+    networks:
+      - main
+    restart: on-failure
+
+networks:
+  main:
+
+volumes:
+  postgres-data:
