@@ -25,7 +25,7 @@ SECRET_KEY = 'z38=&7!@v^2usrivhbh@wdg5)nugm5@*dosd(sx_yf07mw9if$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -81,7 +81,8 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'postgres',
+        #'HOST': 'postgres',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -125,3 +126,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+
+
+# Celery config
+#CELERY_BROKER_URL = 'pyamqp://rabbitmq:5672'
+#CELERY_RESULT_BACKEND = 'redis://redis:6379'
+
+CELERY_BROKER_URL = 'pyamqp://localhost:5672'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'

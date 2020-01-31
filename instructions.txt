@@ -1,0 +1,6 @@
+celery:
+celery -A test_task worker -l info
+
+docker-compose:
+docker-compose -f docker-compose.dev.yml -p test_task up (-d)
+docker-compose -f docker-compose.dev.yml -p test_task down

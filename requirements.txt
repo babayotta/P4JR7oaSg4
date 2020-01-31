@@ -6,3 +6,4 @@ matplotlib
 numexpr
 numpy
 celery
+redis
