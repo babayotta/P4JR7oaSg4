@@ -27,6 +27,5 @@ def plotter(function_id):
     plt.savefig(figure, format='png')
     content_file = ImageFile(figure)
     func.image.save(f'{now}' + '.png', content_file)
-    func.save(False)
+    func.save()
     plt.close()
-    return None

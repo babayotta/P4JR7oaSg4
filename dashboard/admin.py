@@ -1,6 +1,9 @@
 from django.contrib import admin
 from .models import Function
 
+from .tasks import plotter
+from django.db import transaction
+
 # Register your models here.
 
 
@@ -22,3 +25,9 @@ class FunctionAdmin(admin.ModelAdmin):
         'step',
         'date',
     )
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        # https://stackoverflow.com/questions/53901462/where-to-call-a-celery-task-on-model-save
+        transaction.on_commit(lambda: plotter.delay(obj.id))
+

@@ -15,14 +15,6 @@ class Function(models.Model):
     def __str__(self):
         return f'{self.function_text} - {self.interval} - {self.step}'
 
-    def save(self, generate_image=True, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if generate_image:
-            from .tasks import plotter
-            from django.db import transaction
-            # https://stackoverflow.com/questions/53901462/where-to-call-a-celery-task-on-model-save
-            transaction.on_commit(lambda: plotter.delay(self.id))
-
     # https://stackoverflow.com/questions/16307307/django-admin-show-image-from-imagefield
     def image_tag(self):
         if self.image:
