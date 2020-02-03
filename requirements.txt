@@ -7,3 +7,4 @@ numexpr
 numpy
 celery
 redis
+requests

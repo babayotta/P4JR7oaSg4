@@ -81,8 +81,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        #'HOST': 'postgres',
-        'HOST': 'localhost',
+        'HOST': 'postgres',
         'PORT': '5432',
     }
 }
@@ -129,8 +128,19 @@ MEDIA_URL = '/media/'
 
 
 # Celery config
-#CELERY_BROKER_URL = 'pyamqp://rabbitmq:5672'
-#CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_BROKER_URL = 'pyamqp://rabbitmq:5672'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+
 
 CELERY_BROKER_URL = 'pyamqp://localhost:5672'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}

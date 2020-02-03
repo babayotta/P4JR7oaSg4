@@ -1,10 +1,7 @@
 from django.contrib import admin
-from .models import Function
-
-from .tasks import plotter
 from django.db import transaction
-
-# Register your models here.
+from .models import Function
+from .tasks import plotter
 
 
 @admin.register(Function)

@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.html import mark_safe
 
-# Create your models here.
-
 
 class Function(models.Model):
     function_text = models.CharField(max_length=200)

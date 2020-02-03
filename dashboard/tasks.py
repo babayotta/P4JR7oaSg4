@@ -1,12 +1,11 @@
-from celery import shared_task
-from .models import Function
-
 import datetime
 import io
 import numpy as np
 import numexpr as ne
 import matplotlib.pyplot as plt
 from django.core.files.images import ImageFile
+from celery import shared_task
+from .models import Function
 
 
 @shared_task

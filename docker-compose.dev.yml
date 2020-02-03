@@ -2,6 +2,16 @@ version: '3.4'
 
 services:
 
+#  highcharts:
+#    container_name: highcharts
+#    hostname: highcharts
+#    image: onsdigital/highcharts-export-node
+#    networks:
+#      - main
+#    ports:
+#    - "8889:8889"
+#    restart: on-failure
+
   rabbitmq:
     container_name: rabbitmq
     hostname: rabbitmq
