@@ -1,5 +1,4 @@
 django
-ipython
 psycopg2-binary
 pillow
 matplotlib
@@ -7,4 +6,3 @@ numexpr
 numpy
 celery
 redis
-requests

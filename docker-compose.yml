@@ -2,16 +2,6 @@ version: '3.4'
 
 services:
 
-#  highcharts:
-#    container_name: highcharts
-#    hostname: highcharts
-#    image: highcharts-export-node
-#    networks:
-#      - main
-#    ports:
-#    - "8889:8889"
-#    restart: on-failure
-
   rabbitmq:
     container_name: rabbitmq
     hostname: rabbitmq
@@ -60,15 +50,15 @@ services:
     ports:
     - "8000:8000"
     volumes:
-    - .:/usr/src/test_task
+    - images:/usr/src/test_task/images
     hostname: django
-    #image: django-image
+    image: test_task_django_image
     networks:
       - main
     restart: on-failure
 
   celery:
-    build: .
+    image: test_task_django_image
     command: sh -c "./wait-for-it.sh -t 15 rabbitmq:5672 && ./wait-for-it.sh -t 15 redis:6379 && ./wait-for-it.sh -t 15 django:8000 -- celery -A test_task worker -l info"
     container_name: celery
     depends_on:
@@ -76,7 +66,7 @@ services:
       - rabbitmq
       - redis
     volumes:
-      - .:/usr/src/test_task
+      - images:/usr/src/test_task/images
     hostname: celery
     networks:
       - main
@@ -88,3 +78,4 @@ networks:
 volumes:
   postgres-data:
   redis:
+  images:
