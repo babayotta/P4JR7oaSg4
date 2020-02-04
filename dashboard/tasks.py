@@ -11,20 +11,27 @@ from .models import Function
 @shared_task
 def plotter(function_id):
     func = Function.objects.get(id=function_id)
-    now = func.date
-    delta = datetime.timedelta(days=func.interval)
-    previous_date = now - delta
-    second_posix_date = now.timestamp()
-    first_posix_date = previous_date.timestamp()
-    step = func.step * 60 * 60
+    try:
+        func.image.delete()
+        func.exception_text = ''
 
-    t = np.arange(first_posix_date, second_posix_date, step)
-    y = ne.evaluate(func.function_text)
+        now = func.date
+        delta = datetime.timedelta(days=func.interval)
+        previous_date = now - delta
+        second_posix_date = now.timestamp()
+        first_posix_date = previous_date.timestamp()
+        step = func.step * 60 * 60
 
-    figure = io.BytesIO()
-    plt.plot(t, y)
-    plt.savefig(figure, format='png')
-    content_file = ImageFile(figure)
-    func.image.save(f'{now}' + '.png', content_file)
-    func.save()
-    plt.close()
+        t = np.arange(first_posix_date, second_posix_date, step)
+        y = ne.evaluate(func.function_text)
+
+        figure = io.BytesIO()
+        plt.plot(t, y)
+        plt.savefig(figure, format='png')
+        plt.close()
+        content_file = ImageFile(figure)
+        func.image.save(f'{now}' + '.png', content_file)
+        func.save()
+    except Exception as e:
+        func.exception_text = e
+        func.save()
