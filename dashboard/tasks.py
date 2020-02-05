@@ -26,12 +26,19 @@ def plotter(function_id):
         y = ne.evaluate(func.function_text)
 
         figure = io.BytesIO()
-        plt.plot(t, y)
+
+        plt.figure(figsize=(20, 10))
+        plt.title(f'{func.function_text}')
+        plt.xlabel('t')
+        plt.ylabel('f(t)')
+        plt.grid()
+        plt.plot(t, y, 'o-')
         plt.savefig(figure, format='png')
         plt.close()
-        content_file = ImageFile(figure)
-        func.image.save(f'{now}' + '.png', content_file)
+
+        func.image.save(f'{now}' + '.png', ImageFile(figure))
         func.save()
+
     except Exception as e:
         func.exception_text = e
         func.save()

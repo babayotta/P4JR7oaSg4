@@ -24,12 +24,16 @@ class FunctionAdmin(admin.ModelAdmin):
         'date',
     )
 
-    def changelist_view(self, request, extra_context=None):
-        return super().changelist_view(request, extra_context=None)
-
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
+    def response_add(self, request, obj, post_url_continue=None):
         # https://stackoverflow.com/questions/53901462/where-to-call-a-celery-task-on-model-save
-        transaction.on_commit(lambda: plotter.delay(obj.id))
-        # plotter.apply_async((obj.id,), countdown=5)
+        transaction.on_commit(lambda: plot_and_wait(obj.id))
+        return super().response_add(request, obj, post_url_continue=None)
 
+    def response_change(self, request, obj):
+        transaction.on_commit(lambda: plot_and_wait(obj.id))
+        return super().response_change(request, obj)
+
+
+def plot_and_wait(function_id):
+    result = plotter.delay(function_id)
+    result.wait(timeout=10, interval=1)
