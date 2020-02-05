@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch.dispatcher import receiver
 from django.contrib.auth.models import User
 from django.utils.html import mark_safe
 
@@ -21,3 +23,9 @@ class Function(models.Model):
         elif self.image:
             return mark_safe('<img src="%s" width="250" />' % self.image.url)
     image_tag.short_description = 'image'
+
+
+# https://stackoverflow.com/questions/16041232/django-delete-filefield
+@receiver(pre_delete, sender=Function)
+def function_image_delete(sender, instance, **kwargs):
+    instance.image.delete(False)
