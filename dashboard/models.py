@@ -11,7 +11,7 @@ class Function(models.Model):
     step = models.IntegerField()
     image = models.ImageField(blank=True, null=True, upload_to='images/')
     date = models.DateTimeField(auto_now=True)
-    exception_text = models.CharField(blank=True, null=True, max_length=300)
+    exception_text = models.CharField(blank=True, null=True, max_length=1000)
 
     def __str__(self):
         return f'{self.function_text} - {self.interval} - {self.step}'
