@@ -1,23 +1,20 @@
 version: '3.4'
 
 services:
-
   rabbitmq:
     container_name: rabbitmq
     hostname: rabbitmq
-    image: rabbitmq:latest
-    networks:
-      - main
+    image: rabbitmq
     ports:
     - "5672:5672"
+    volumes:
+    - rabbitmq:/var/lib/rabbitmq
     restart: on-failure
 
   redis:
     container_name: redis
     hostname: redis
     image: redis
-    networks:
-      - main
     ports:
     - "6379:6379"
     volumes:
@@ -27,55 +24,47 @@ services:
   postgres:
     container_name: postgres
     hostname: postgres
-    image: postgres:latest
+    image: postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
-    networks:
-      - main
     ports:
     - "5432:5432"
-    restart: on-failure
     volumes:
     - postgres-data:/var/lib/postgresql/data
+    restart: on-failure
 
   django:
     build: .
-    command: sh -c "./wait-for-it.sh -t 15 postgres:5432 && ./wait-for-it.sh -t 15 rabbitmq:5672 && ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000"
+    command: sh -c "./django_start.sh"
     container_name: django
+    hostname: django
+    image: test_task_django_image
     depends_on:
       - postgres
       - rabbitmq
     ports:
     - "8000:8000"
     volumes:
-    - images:/usr/src/test_task/images
-    hostname: django
-    image: test_task_django_image
-    networks:
-      - main
+    - images:/usr/src/test_task/media/images
     restart: on-failure
 
   celery:
-    image: test_task_django_image
-    command: sh -c "./wait-for-it.sh -t 15 rabbitmq:5672 && ./wait-for-it.sh -t 15 redis:6379 && ./wait-for-it.sh -t 15 django:8000 -- celery -A test_task worker -l info"
+    command: sh -c "./celery_start.sh"
     container_name: celery
+    hostname: celery
+    image: test_task_django_image
     depends_on:
       - django
       - rabbitmq
       - redis
     volumes:
-      - images:/usr/src/test_task/images
-    hostname: celery
-    networks:
-      - main
+      - images:/usr/src/test_task/media/images
     restart: on-failure
-
-networks:
-  main:
 
 volumes:
   postgres-data:
+  rabbitmq:
   redis:
   images:
