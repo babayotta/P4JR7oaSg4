@@ -25,7 +25,6 @@ class FunctionAdmin(admin.ModelAdmin):
     )
 
     def response_add(self, request, obj, post_url_continue=None):
-        # https://stackoverflow.com/questions/53901462/where-to-call-a-celery-task-on-model-save
         transaction.on_commit(lambda: plot_and_wait(obj.id))
         return super().response_add(request, obj, post_url_continue=None)
 

@@ -16,7 +16,6 @@ class Function(models.Model):
     def __str__(self):
         return f'{self.function_text} - {self.interval} - {self.step}'
 
-    # https://stackoverflow.com/questions/16307307/django-admin-show-image-from-imagefield
     def image_tag(self):
         if self.exception_text:
             return mark_safe('<p>%s</p>' % self.exception_text)
@@ -25,7 +24,6 @@ class Function(models.Model):
     image_tag.short_description = 'image'
 
 
-# https://stackoverflow.com/questions/16041232/django-delete-filefield
 @receiver(pre_delete, sender=Function)
 def function_image_delete(sender, instance, **kwargs):
     instance.image.delete(False)

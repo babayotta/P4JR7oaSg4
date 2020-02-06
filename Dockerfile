@@ -9,4 +9,4 @@ RUN pip install -Ur requirements.txt
 RUN mkdir -p ./media/images
 COPY . .
 
-CMD django_start.sh
+CMD ./django_start.sh
